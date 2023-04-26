@@ -1,0 +1,5 @@
+mysql.connector
+fastapi
+streamlit-extras
+uvicorn
+sqlalchemy

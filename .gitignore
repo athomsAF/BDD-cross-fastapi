@@ -1,0 +1,6 @@
+__pycache__
+.nox
+noxfile.py
+setup.py
+*ipynb
+*ipynb_checkpoints
