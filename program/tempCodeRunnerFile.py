@@ -2,6 +2,7 @@ import mysql.connector as MC
 from sql.sql import ConnectionSQL
 
 
+
 def table_delete(cursor):
       for i in ["COMMAND", "COMPOSITION", "SHOP", "CLIENT", "FLOWER", "BOUQUET"]:
             cursor.execute(f"DROP TABLE IF EXISTS {i};")
@@ -66,22 +67,10 @@ def table_creation(cursor) -> None:
                         FOREIGN KEY (IDFLOWER) REFERENCES FLOWER(IDFLOWER));
                         """)
 
-def add_random_value(cursor) -> None:
-      print("test")
-      cursor.execute(f"INSERT INTO SHOP (NAME, ADRESS) VALUES ('Fleuriste de la rue', '1 rue des fleurs');")
-      cursor.execute(f"INSERT INTO SHOP (NAME, ADRESS) VALUES ('Fleuriste de la place', '2 place des fleurs');")
-      cursor.execute(f"INSERT INTO SHOP (NAME, ADRESS) VALUES ('Fleuriste de la ville', '3 ville des fleurs');")
-      cursor.execute(f"INSERT INTO CLIENT (NAME, LASTNAME, PHONE_NUMBER, MAIL, PASSWORD, FACTURATION_ADDRESS, CREDIT_CARD_NUMBER) VALUES ('Jean', 'Dupont', '0123456789', 'test@devinci.fr', 'test', '1 rue des fleurs', '0123456789012345');")
-      cursor.execute(f"INSERT INTO CLIENT (NAME, LASTNAME, PHONE_NUMBER, MAIL, PASSWORD, FACTURATION_ADDRESS, CREDIT_CARD_NUMBER) VALUES ('Jeanne', 'Dupont', '0123456789', 'testttt@gmail.com', 'test', '1 rue des fleurs', '0123456789012345');")
-
-def show_value_in_table(cursor, table:str) -> None:
-      cursor.execute(f"SELECT * FROM {table};")
-      print(cursor.fetchall())
-
 connection=ConnectionSQL("root","root")
 table_delete(connection.cursor)
 table_creation(connection.cursor)
-add_random_value(connection.cursor)
-show_value_in_table(connection.cursor, "CLIENT")
-connection.connection.commit() #type: ignore
-#add value inside CLIENT
+connection.cursor.execute("""
+                  INSERT INTO CLIENT (NAME, LASTNAME, PHONE_NUMBER, MAIL, PASSWORD, FACTURATION_ADDRESS, CREDIT_CARD_NUMBER) 
+                  VALUES ('John', 'Doe', '1234567890', 'test@edu.devinc3i.fr', 'test', '1 rue de la paix', '1234567890123456');
+                  """) #(%s,%s,%s,%s,%s,%s,%s)""",

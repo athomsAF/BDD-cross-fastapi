@@ -3,11 +3,11 @@ import mysql.connector as MC
 from streamlit_extras.switch_page_button import switch_page
 import time
 import sys
-sys.path.append('../')
+sys.path.append(' ../')
 
 #"""------------------COnnection to other file------------------"""
 from sql.sql import ConnectionSQL
-from api.request import connection_mysql
+
 # st.set_page_config(page_title="Connection to database")
 
 st.markdown("# Connection Demo")
@@ -31,9 +31,10 @@ class Connection_page:
                   if submit_button:
                         self.connection()
 
-      def connection(self) :
-            print(connection_mysql(self.user,self.password))
-            self.form.success("connection réussie") if (connection_mysql(self.user,self.password)==True) else self.form.error("connection échouée")
+      def connection(self) -> None:
+            self.connection_user=ConnectionSQL(self.user,self.password)
+            connection.connection_user.show_table()
+
 
 #adding a single-line text input widget
 connection=Connection_page()
