@@ -31,11 +31,25 @@ async def create_a_command(email:str, shop_adresse:str) -> bool:
       return connection_bdd.insert_command(idclient,idshop) if idshop is not None and idclient is not None else False
 
 @app.post("/get_column/")
-async def get_all_column(column :str, table :str) -> Optional[str]:
-      data=connection_bdd.show_in_table(column, table)
+async def get_all_column(column :str, table :str, select=None, table2=None,select2=None, value=None) -> Optional[str]:
+      if select2==None:
+            data=connection_bdd.show_in_table(column, table, select, table2, select2, value )
+      else:
+            data=connection_bdd.show_in_table(column, table)
       print((list(data)) if data is not None else None)
-      data=[i[0] for i in list(data)] if data is not None else None
+      data=[str(i[0]) for i in list(data)] if data is not None else None
       return ".".join(data) if data is not None else None
+
+@app.post("/get_all_command/")
+async def get_all_command() -> float:
+      data=connection_bdd.count_command()
+      return float(list(data)[0][0]) if data is not None else 0
+
+@app.post("/best_client/")
+async def best_client() -> Optional[str]:
+      data=connection_bdd.best_client()
+      return " ".join(data[0]) if data is not None else None
+
 
 @app.get("/test_connection/")
 async def test_connection(login:str, password:str) -> bool:

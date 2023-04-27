@@ -1,6 +1,5 @@
 import streamlit as st
 import mysql.connector as MC
-from streamlit_extras.switch_page_button import switch_page
 import time
 import sys
 sys.path.append('../')

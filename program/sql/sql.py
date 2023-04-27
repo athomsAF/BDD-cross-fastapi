@@ -12,8 +12,8 @@ class ConnectionSQL:
                         user=self.USER,
                         password=self.PASSWORD,
                         database="project"
-                        ) 
-                  if(self.connection.is_connected()):
+                        )
+                  if(self.connection !=None and self.connection.is_connected()):
                         self.cursor= self.connection.cursor(buffered=True)
                         print("connection établie avec le compte "+self.USER)
             except MC.Error as error:
@@ -29,10 +29,13 @@ class ConnectionSQL:
                   return self.cursor.fetchall()
             else:
                   return None
-      def show_in_table (self,column:str, table:str):
+      def show_in_table (self,column:str, table:str, select=None, table2=None, select2=None, value=None ) -> Optional[List[Tuple[str]]]:
             if self.cursor is not None:
+                  if select is not None:
+                        self.cursor.execute(f"SELECT {column} FROM {table} WHERE {select} = (SELECT {select} FROM {table2} WHERE {select2} = '{value}')")
                   #get current time in this format: YYYY-MM-DD
-                  self.cursor.execute(f"SELECT {column} FROM {table};")
+                  else:
+                        self.cursor.execute(f"SELECT {column} FROM {table};")
                   return self.cursor.fetchall()
             else:
                   return None
@@ -45,6 +48,25 @@ class ConnectionSQL:
                   return True
             else:
                   return False
+
+      def best_client(self):
+            if self.cursor is not None:
+                  self.cursor.execute("""
+                        SELECT c.NAME, c.LASTNAME
+                        FROM CLIENT c
+                        JOIN COMMAND cm ON c.IDCLIENT = cm.IDCLIENT
+                        GROUP BY c.IDCLIENT
+                        ORDER BY COUNT(*) DESC
+                        LIMIT 1
+                        """)
+                  return self.cursor.fetchall()
+
+      def count_command(self):
+            if self.cursor is not None:
+                  self.cursor.execute(f"SELECT COUNT(*)/12 AS nb_bouquets_achetés_divisé_par_5 FROM CLIENT JOIN COMMAND ON CLIENT.IDCLIENT = COMMAND.IDCLIENT GROUP BY CLIENT.IDCLIENT")
+                  data=self.cursor.fetchall()
+                  print(data)
+                  return data
 
 class Shop:
       # def __init__(self,id :int, name :str, adress :str):

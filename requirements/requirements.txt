@@ -3,3 +3,5 @@ fastapi
 streamlit-extras
 uvicorn
 sqlalchemy
+pandas 
+numpy
